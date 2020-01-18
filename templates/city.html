@@ -1,0 +1,41 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+
+
+ <div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">city name</th>
+                <th scope="col">foundation year</th>
+                <th scope="col">country name</th>
+                <th scope="col">city_mayor</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for user in building %}
+        <tr>
+            <td> {{city.city_name}} </td>
+            <td> {{city.foundation_year}} </td>
+            <td> {{city.country_name}} </td>
+            <td> {{city.city_mayor}} </td>
+                         <td>
+                    <a href="/edit_city/{{city.city_name}}"  button type="button" class="btn btn-warning" name="btn_edit_holiday" data-city_name="{{city.city_name}}">Edit</a>
+                    <a href="/delete_city/{{city.city_name}}" button type="button" class="btn btn-danger" name="btn_delete_holiday" data-city_name="{{city.city_name}}">Delete</a>
+                </td>
+
+        </tr>
+        {% endfor %}
+                    <tr>
+                <td> <a href="/new_city" button type="button" class="btn btn-success" name="btn_new_holiday">New City</a> </td>
+            </tr>
+
+        </tbody>
+    </table>
+ </div>
+
+
+{% endblock %}

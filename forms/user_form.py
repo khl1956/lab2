@@ -148,3 +148,49 @@ class LessonForm1(Form):
     ])
 
     submit = SubmitField("Save")
+
+
+
+
+class CityForm(Form):
+    city_name = StringField("city_name: ", [
+        validators.DataRequired("Please enter city_name.")
+    ])
+
+    foundation_year = StringField("foundation_year: ", [
+        validators.DataRequired("Please enter foundation_year."),
+        validators.Length(1, 20, "Name should be from 1 to 20 symbols")
+    ])
+
+    country_name = StringField("country_name: ", [
+        validators.DataRequired("Please enter country_name."),
+        validators.Length(1, 20, "Name should be from 1 to 20 symbols")])
+
+    city_mayor = StringField("city_mayor: ", [
+        validators.Email("Please enter city_mayor."),
+        validators.Length(1, 40, "Name should be from 1 to 40 symbols")])
+
+    build_number = StringField("build_number: ", [
+        validators.DataRequired("Please enter your build_number."),
+        validators.Length(1, 30, "Name should be from 1 to 30 symbols")])
+
+
+
+    submit = SubmitField("Save")
+
+
+class CityForm1(Form):
+
+
+    foundation_year = StringField("foundation_year: ", [
+        validators.DataRequired("Please enter foundation_year."),
+        validators.Length(1, 20, "Name should be from 1 to 20 symbols")
+    ])
+
+    country_name = StringField("country_name: ", [
+        validators.DataRequired("Please enter country_name."),
+        validators.Length(1, 20, "Name should be from 1 to 20 symbols")])
+
+
+    submit = SubmitField("Save")
+

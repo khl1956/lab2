@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from forms.user_form import BuildingForm, UsersForm, LessonForm, BuildingForm1, UsersForm1, LessonForm1
+from forms.user_form import BuildingForm, UsersForm, LessonForm, BuildingForm1, UsersForm1, LessonForm1, CityForm, CityForm1
 
 import plotly.graph_objs as go
 import plotly
@@ -15,16 +15,16 @@ from sqlalchemy.sql import func
 app = Flask(__name__)
 app.secret_key = 'key'
 
-ENV = 'prod'
+ENV = 'dev'
 if ENV == 'dev':
     app.debug = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1@localhost/test'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1@localhost/laba_2'
 else:
     app.debug = False
     app.config[
         'SQLALCHEMY_DATABASE_URI'] = 'postgres://fhehffwmvlzkku:e4e9539062e2cd4765550e4ad36e835e630b2d4b442504998f870733d03df2a0@ec2-79-125-2-142.eu-west-1.compute.amazonaws.com:5432/d1jhdnlc95ioeq'
 
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1@localhost/test'
+
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -39,6 +39,24 @@ class ormBuilding(db.Model):
     floors_number = db.Column(db.String(50), nullable=False)
 
     Lesson_ = db.relationship('ormLesson')
+    city_name = db.relationship('ormCity', secondary='city_has_building')
+
+
+class ormCity(db.Model):
+    __tablename__ = 'City'
+
+    city_name = db.Column(db.String(50), primary_key=True)
+    foundation_year = db.Column(db.String(50), nullable=False)
+    country_name = db.Column(db.String(50), nullable=False)
+    city_mayor = db.Column(db.String(50), nullable=False)
+
+    build_number = db.relationship('ormBuilding', secondary='city_has_building')
+
+class cityHasBuilding(db.Model):
+    __tablename__ = 'city_has_building'
+    build_number = db.Column(db.String(20), db.ForeignKey('Building.build_number'), primary_key=True)
+    city_name = db.Column(db.String, db.ForeignKey('City.city_name'), primary_key=True)
+
 
 
 class ormUsers(db.Model):
@@ -54,6 +72,7 @@ class ormUsers(db.Model):
     lesson_name = db.Column(db.String(20), db.ForeignKey('Lesson.lesson_name'), nullable=False)
 
 
+
 class ormLesson(db.Model):
     __tablename__ = 'Lesson'
 
@@ -66,29 +85,41 @@ class ormLesson(db.Model):
 
 db.create_all()
 
-# db.session.query(ormUsers).delete()
-# db.session.query(ormLesson).delete()
-# db.session.query(ormBuilding).delete()
-#
-# User1 = ormUsers(user_id = 1, user_name ='Andriy', user_surname ='Hladkiy', user_email ='andriyha98@gmail.com', user_groupe ='KM-63', user_faculty ='FMA', user_course ='4', lesson_name ='matan')
-# User2 = ormUsers(user_id = 2, user_name ='Ihor', user_surname ='Riasik', user_email ='riasik99@gmail.com', user_groupe ='KM-63', user_faculty ='FMA', user_course ='4', lesson_name ='matan')
-# User3 = ormUsers(user_id = 3, user_name ='Alex', user_surname ='Buc', user_email ='buc99@gmail.com', user_groupe ='KM-63', user_faculty ='FMA', user_course ='4', lesson_name ='matan')
-# Building1 =ormBuilding(build_number = '14', build_address='politehnichna 14', floors_number='72')
-# Building2 =ormBuilding(build_number = '7', build_address='politehnichna 21', floors_number='302')
-# Building3 =ormBuilding(build_number = '15', build_address='politehnichna 16', floors_number='95')
-# Lesson1 = ormLesson(lesson_name = 'matan', classroom_number = '95', build_number = '15')
-# Lesson2 = ormLesson(lesson_name = 'db', classroom_number = '72', build_number = '14')
-# Lesson3 = ormLesson(lesson_name = 'ekonomika', classroom_number = '302', build_number = '7')
-# Lesson1.Users__.append(User1)
-# Lesson1.Users__.append(User3)
-# Lesson1.Users__.append(User2)
-# Building3.Lesson_.append(Lesson1)
-# Building1.Lesson_.append(Lesson2)
-# Building2.Lesson_.append(Lesson3)
-# db.session.add_all([User1,User2,User3])
-# db.session.add_all([Building1,Building2,Building3])
-# db.session.add_all([Lesson1,Lesson2,Lesson3])
-# db.session.commit()
+db.session.query(ormUsers).delete()
+db.session.query(ormLesson).delete()
+db.session.query(ormBuilding).delete()
+db.session.query(ormCity).delete()
+
+User1 = ormUsers(user_id = 1, user_name ='Andriy', user_surname ='Hladkiy', user_email ='andriyha98@gmail.com', user_groupe ='KM-63', user_faculty ='FMA', user_course ='4', lesson_name ='matan')
+User2 = ormUsers(user_id = 2, user_name ='Ihor', user_surname ='Riasik', user_email ='riasik99@gmail.com', user_groupe ='KM-63', user_faculty ='FMA', user_course ='4', lesson_name ='matan')
+User3 = ormUsers(user_id = 3, user_name ='Alex', user_surname ='Buc', user_email ='buc99@gmail.com', user_groupe ='KM-63', user_faculty ='FMA', user_course ='4', lesson_name ='matan')
+Building1 =ormBuilding(build_number = '14', build_address='politehnichna 14', floors_number='72')
+Building2 =ormBuilding(build_number = '7', build_address='politehnichna 21', floors_number='302')
+Building3 =ormBuilding(build_number = '15', build_address='politehnichna 16', floors_number='95')
+Lesson1 = ormLesson(lesson_name = 'matan', classroom_number = '95', build_number = '15')
+Lesson2 = ormLesson(lesson_name = 'db', classroom_number = '72', build_number = '14')
+Lesson3 = ormLesson(lesson_name = 'ekonomika', classroom_number = '302', build_number = '7')
+City1 = ormCity(city_name = 'Kiev', foundation_year = '1000', country_name = 'Ukraine', city_mayor = 'Klichko', build_number = '15')
+City2 = ormCity(city_name = 'Sokiryani', foundation_year = '1500', country_name = 'Ukraine', city_mayor = 'Ravlik', build_number = '15')
+City3 = ormCity(city_name = 'Milan', foundation_year = '850', country_name = 'Italy', city_mayor = 'hz kto', build_number = '15')
+
+
+Lesson1.Users__.append(User1)
+Lesson1.Users__.append(User3)
+Lesson1.Users__.append(User2)
+Building3.Lesson_.append(Lesson1)
+Building1.Lesson_.append(Lesson2)
+Building2.Lesson_.append(Lesson3)
+Lesson1.Users__.append(User1)
+Lesson1.Users__.append(User3)
+Lesson1.Users__.append(User2)
+db.session.add_all([User1,User2,User3])
+db.session.add_all([Building1,Building2,Building3])
+db.session.add_all([Lesson1,Lesson2,Lesson3])
+db.session.add_all([City1,City2,City3])
+
+
+db.session.commit()
 
 
 
@@ -372,6 +403,81 @@ def dashboard():
 
 
 #     =================================================================================================
+
+@app.route('/city', methods=['GET'])
+def city():
+    result = db.session.query(ormCity).all()
+
+    return render_template('city.html', users=result)
+
+
+@app.route('/new_city', methods=['POST', 'GET'])
+def new_city():
+    form = CityForm()
+
+    if request.method == 'POST':
+        if form.validate() == True:
+            ok = ormUsers(
+                city_name=form.city_name.data,
+                foundation_year=form.foundation_year.data,
+                country_name=form.country_name.data,
+                city_mayor=form.city_mayor.data,
+                build_number=form.build_number.data,
+
+            )
+            db.session.add(ok)
+            db.session.commit()
+
+
+            return redirect(url_for('city'))
+        else:
+            return render_template('ok.html', form=form, form_name="ok")
+
+    elif request.method == 'GET':
+        return render_template('city_form.html', form=form, form_name="city form")
+
+
+@app.route('/edit_city/<string:x>', methods=['GET', 'POST'])
+def edit_city(x):
+    form = CityForm1()
+    user = db.session.query(ormCity).filter(ormCity.city_name == x).one()
+
+    if request.method == 'GET':
+
+        # fill form and send to user
+        form.city_name.data = city.city_name
+        form.foundation_year.data = city.foundation_year
+        form.country_name.data = city.country_name
+        form.city_mayor.data = city.city_mayor
+
+
+        return render_template('city_form1.html', form=form, form_name="Edit city")
+
+    else:
+
+        if form.validate() == False:
+            city.foundation_year = form.foundation_year.data
+            city.country_name = form.country_name.data
+            city.city_mayor = form.city_mayor.data
+
+            db.session.commit()
+
+            # return redirect('/user')
+            return render_template('OK.html')
+        else:
+            return render_template('city_form1.html', form=form, form_name="Edit city")
+
+
+@app.route('/delete_city/<string:x>', methods=['GET'])
+def delete_city(x):
+    result = db.session.query(ormCity).filter(ormCity.city_name == x).one()
+
+    db.session.delete(result)
+    db.session.commit()
+
+    return render_template('OK.html')
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
