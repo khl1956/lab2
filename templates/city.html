@@ -16,15 +16,15 @@
         </thead>
 
         <tbody>
-        {% for user in building %}
+        {% for user in city %}
         <tr>
-            <td> {{city.city_name}} </td>
-            <td> {{city.foundation_year}} </td>
-            <td> {{city.country_name}} </td>
-            <td> {{city.city_mayor}} </td>
+            <td> {{user.city_name}} </td>
+            <td> {{user.foundation_year}} </td>
+            <td> {{user.country_name}} </td>
+            <td> {{user.city_mayor}} </td>
                          <td>
-                    <a href="/edit_city/{{city.city_name}}"  button type="button" class="btn btn-warning" name="btn_edit_holiday" data-city_name="{{city.city_name}}">Edit</a>
-                    <a href="/delete_city/{{city.city_name}}" button type="button" class="btn btn-danger" name="btn_delete_holiday" data-city_name="{{city.city_name}}">Delete</a>
+                    <a href="/edit_city/{{user.city_name}}"  button type="button" class="btn btn-warning" name="btn_edit_holiday" data-city_name="{{user.city_name}}">Edit</a>
+                    <a href="/delete_city/{{user.city_name}}" button type="button" class="btn btn-danger" name="btn_delete_holiday" data-city_name="{{user.city_name}}">Delete</a>
                 </td>
 
         </tr>

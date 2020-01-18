@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, PasswordField, DateField, HiddenField, IntegerField
+from wtforms import StringField, SubmitField, PasswordField, DateField, HiddenField, IntegerField,ValidationError
 from wtforms import validators
 
 
@@ -151,28 +151,36 @@ class LessonForm1(Form):
 
 
 
+def valid(form, field):
+    if (field.data) not in ['Ukraine','Italy','Austria']:
+        raise ValidationError("input Ukraine,Italy,Austria")
+
+def valid1(form, field):
+    if int(field.data) < 1020:
+        raise ValidationError("1020 and more")
+
 
 class CityForm(Form):
     city_name = StringField("city_name: ", [
         validators.DataRequired("Please enter city_name.")
     ])
 
-    foundation_year = StringField("foundation_year: ", [
+    foundation_year = StringField("foundation_year: ", [valid1,
         validators.DataRequired("Please enter foundation_year."),
         validators.Length(1, 20, "Name should be from 1 to 20 symbols")
     ])
 
-    country_name = StringField("country_name: ", [
+    country_name = StringField("country_name: ", [valid,
         validators.DataRequired("Please enter country_name."),
         validators.Length(1, 20, "Name should be from 1 to 20 symbols")])
 
     city_mayor = StringField("city_mayor: ", [
-        validators.Email("Please enter city_mayor."),
+        validators.DataRequired("Please enter city_mayor."),
         validators.Length(1, 40, "Name should be from 1 to 40 symbols")])
 
-    build_number = StringField("build_number: ", [
-        validators.DataRequired("Please enter your build_number."),
-        validators.Length(1, 30, "Name should be from 1 to 30 symbols")])
+    # build_number = StringField("build_number: ", [
+    #     validators.DataRequired("Please enter your build_number."),
+    #     validators.Length(1, 30, "Name should be from 1 to 30 symbols")])
 
 
 
@@ -180,16 +188,23 @@ class CityForm(Form):
 
 
 class CityForm1(Form):
+    city_name = StringField("city_name: ", [
+        validators.DataRequired("Please enter city_name.")
+    ])
 
 
-    foundation_year = StringField("foundation_year: ", [
+    foundation_year = StringField("foundation_year: ", [valid1,
         validators.DataRequired("Please enter foundation_year."),
         validators.Length(1, 20, "Name should be from 1 to 20 symbols")
     ])
 
-    country_name = StringField("country_name: ", [
+    country_name = StringField("country_name: ", [valid,
         validators.DataRequired("Please enter country_name."),
         validators.Length(1, 20, "Name should be from 1 to 20 symbols")])
+
+    city_mayor = StringField("city_mayor: ", [
+        validators.DataRequired("Please enter city_mayor."),
+        validators.Length(1, 40, "Name should be from 1 to 40 symbols")])
 
 
     submit = SubmitField("Save")

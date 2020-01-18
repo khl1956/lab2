@@ -89,6 +89,7 @@ db.session.query(ormUsers).delete()
 db.session.query(ormLesson).delete()
 db.session.query(ormBuilding).delete()
 db.session.query(ormCity).delete()
+db.session.query(cityHasBuilding).delete()
 
 User1 = ormUsers(user_id = 1, user_name ='Andriy', user_surname ='Hladkiy', user_email ='andriyha98@gmail.com', user_groupe ='KM-63', user_faculty ='FMA', user_course ='4', lesson_name ='matan')
 User2 = ormUsers(user_id = 2, user_name ='Ihor', user_surname ='Riasik', user_email ='riasik99@gmail.com', user_groupe ='KM-63', user_faculty ='FMA', user_course ='4', lesson_name ='matan')
@@ -99,9 +100,9 @@ Building3 =ormBuilding(build_number = '15', build_address='politehnichna 16', fl
 Lesson1 = ormLesson(lesson_name = 'matan', classroom_number = '95', build_number = '15')
 Lesson2 = ormLesson(lesson_name = 'db', classroom_number = '72', build_number = '14')
 Lesson3 = ormLesson(lesson_name = 'ekonomika', classroom_number = '302', build_number = '7')
-City1 = ormCity(city_name = 'Kiev', foundation_year = '1000', country_name = 'Ukraine', city_mayor = 'Klichko', build_number = '15')
-City2 = ormCity(city_name = 'Sokiryani', foundation_year = '1500', country_name = 'Ukraine', city_mayor = 'Ravlik', build_number = '15')
-City3 = ormCity(city_name = 'Milan', foundation_year = '850', country_name = 'Italy', city_mayor = 'hz kto', build_number = '15')
+City1 = ormCity(city_name = 'Kiev', foundation_year = '1000', country_name = 'Ukraine', city_mayor = 'Klichko')
+City2 = ormCity(city_name = 'Sokiryani', foundation_year = '1500', country_name = 'Ukraine', city_mayor = 'Ravlik')
+City3 = ormCity(city_name = 'Milan', foundation_year = '850', country_name = 'Italy', city_mayor = 'hz kto')
 
 
 Lesson1.Users__.append(User1)
@@ -110,9 +111,12 @@ Lesson1.Users__.append(User2)
 Building3.Lesson_.append(Lesson1)
 Building1.Lesson_.append(Lesson2)
 Building2.Lesson_.append(Lesson3)
-Lesson1.Users__.append(User1)
-Lesson1.Users__.append(User3)
-Lesson1.Users__.append(User2)
+# Building1.city_name.append(City1)
+# Building2.city_name.append(City2)
+# Building3.city_name.append(City3)
+# City1.build_number.append(Building1)
+# City2.build_number.append(Building2)
+# City3.build_number.append(Building3)
 db.session.add_all([User1,User2,User3])
 db.session.add_all([Building1,Building2,Building3])
 db.session.add_all([Lesson1,Lesson2,Lesson3])
@@ -367,10 +371,10 @@ def delete_lesson(x):
 def dashboard():
     query1 = (
         db.session.query(
-            ormUsers.user_faculty,
-            func.count(ormUsers.user_id).label('faculty')
+            ormCity.country_name,
+            func.count(ormCity.city_name).label('city')
         ).
-            group_by(ormUsers.user_faculty)
+            group_by(ormCity.country_name)
     ).all()
 
     query2 = (
@@ -404,11 +408,11 @@ def dashboard():
 
 #     =================================================================================================
 
-@app.route('/city', methods=['GET'])
+@app.route('/show', methods=['GET'])
 def city():
     result = db.session.query(ormCity).all()
 
-    return render_template('city.html', users=result)
+    return render_template('city.html', city=result)
 
 
 @app.route('/new_city', methods=['POST', 'GET'])
@@ -417,12 +421,12 @@ def new_city():
 
     if request.method == 'POST':
         if form.validate() == True:
-            ok = ormUsers(
+            ok = ormCity(
                 city_name=form.city_name.data,
                 foundation_year=form.foundation_year.data,
                 country_name=form.country_name.data,
                 city_mayor=form.city_mayor.data,
-                build_number=form.build_number.data,
+
 
             )
             db.session.add(ok)
@@ -431,7 +435,7 @@ def new_city():
 
             return redirect(url_for('city'))
         else:
-            return render_template('ok.html', form=form, form_name="ok")
+            return render_template('city_form.html', form=form, form_name="ok")
 
     elif request.method == 'GET':
         return render_template('city_form.html', form=form, form_name="city form")
@@ -440,7 +444,7 @@ def new_city():
 @app.route('/edit_city/<string:x>', methods=['GET', 'POST'])
 def edit_city(x):
     form = CityForm1()
-    user = db.session.query(ormCity).filter(ormCity.city_name == x).one()
+    city = db.session.query(ormCity).filter(ormCity.city_name == x).one()
 
     if request.method == 'GET':
 
