@@ -51,6 +51,25 @@ class User(db.Model):
 
     user_presentation = db.relationship('Presentation')
 
+# New class Hotel
+class Hotel(db.Model):
+    tablename = 'Hotel'
+    hotel_name = db.Column(db.String(20), primary_key=True)
+    hotel_opened = db.Column(db.Date)
+    hotel_stars = db.Column(db.Integer)
+    hotel_type = db.Column(db.String(20))
+
+    user_hotel = db.relationship('User', secondary = 'UserHasHotel')
+
+# new relation many Users have many Hotels
+class UserHasHotel(db.Model):
+    __tablename__= 'UserHasHotel'
+    user_name = db.Column(db.String(20), db.ForeignKey('User.user_name'), primary_key=True)
+    hotel_name = db.Column(db.String(20), db.ForeignKey('Hotel.hotel_name'), primary_key=True)
+
+
+    hotel_name_fk = db.relationship("Hotel", secondary='UserHasHotel')
+
 
 class association(db.Model):
     __tablename__ = 'associate_table'
@@ -86,6 +105,7 @@ db.session.query(association).delete()
 db.session.query(Topic).delete()
 db.session.query(Presentation).delete()
 db.session.query(User).delete()
+db.session.query(Hotel).delete()
 db.session.query(Participant).delete()
 
 
@@ -132,30 +152,60 @@ Sam = User(user_email = 'sam@gmail.com',
              user_birthday = '1999-2-1'
             )
 
+# Hotel
+Hilton = Hotel(hotel_name = 'Hilton',
+               hotel_opened = 2012,
+               hotel_stars = 5,
+               hotel_type = 'hotel'
+               )
+
+Intercontinental = Hotel(hotel_name = 'Intercontinental',
+                         hotel_opened = 2010,
+                         hotel_stars = 5,
+                         hotel_type = 'hotel'
+                         )
+
+Kyiv = Hotel(hotel_name = 'Kyiv',
+             hotel_opened = 2000,
+             hotel_stars = 3,
+             hotel_type = 'appartments'
+             )
+
+Youth = Hotel(hotel_name = 'Youth',
+              hotel_opened = 2019,
+              hotel_stars = 3,
+              hotel_type = 'hostel'
+              )
+
+Kolos = Hotel(hotel_name = 'Kolos',
+              hotel_opened = 2003,
+              hotel_stars = 2,
+              hotel_type = 'hostel'
+              )
 
 # insert into Presentation (presentation_name, user_email, presentation_date) values ('Sales', 'alex@gmail.com', '2020-1-4');
 #
 
-Sales = presentation(presentation_name = 'Sales',
+Sales = Presentation(presentation_name = 'Sales',
            user_email = 'alex@gmail.com',
            presentation_date = '2020-1-4')
 
-DataBase = presentation(presentation_name = 'DataBase',
+DataBase = Presentation(presentation_name = 'DataBase',
                   user_email = 'bob@gmail.com',
                   presentation_date = '2020-1-8'
                   )
 
-Music = presentation(presentation_name = 'Music',
+Music = Presentation(presentation_name = 'Music',
                  user_email = 'maria@gmail.com',
                  presentation_date = '2020-1-12'
                  )
 
-Maths = presentation(presentation_name = 'Maths',
+Maths = Presentation(presentation_name = 'Maths',
                     user_email = 'alex@gmail.com',
                     presentation_date = '2020-1-29'
                     )
 
-Sports = presentation(presentation_name = 'Sports',
+Sports = Presentation(presentation_name = 'Sports',
                  user_email = 'alex@gmail.com',
                  presentation_date = '2020-2-1'
                  )
@@ -194,23 +244,23 @@ Math_Maths = Participant(participant_list = 'Math_Maths',
 #
 # insert into Topic (topic_name, presentation_name) values ('Business', 'Sales');
 
-Art = topic(topic_name = 'Art',
+Art = Topic(topic_name = 'Art',
                presentation_name = 'Music'
                )
 
-Science = topic(topic_name = 'Science',
+Science = Topic(topic_name = 'Science',
                   presentation_name = 'Maths'
                   )
 
-Math = topic(topic_name = 'Math',
+Math = Topic(topic_name = 'Math',
                 presentation_name = 'Maths'
                 )
 
-Computer = topic(topic_name = 'Computer',
+Computer = Topic(topic_name = 'Computer',
                          presentation_name = 'DataBase'
                          )
 
-Business = topic(topic_name = 'Business',
+Business = Topic(topic_name = 'Business',
                    presentation_name = 'Sales'
                    )
 
@@ -224,7 +274,7 @@ Alex.user_presentation.append(Sports)
 Music.presentation_topic.append(Art)
 Maths.presentation_topic.append(Science)
 Maths.presentation_topic.append(Math)
-Database.presentation_topic.append(Computer)
+DataBase.presentation_topic.append(Computer)
 Sales.presentation_topic.append(Business)
 
 Maths.participant_list_fk.append(Science_Maths)
@@ -235,6 +285,7 @@ Maths.participant_list_fk.append(Math_Maths)
 
 
 db.session.add_all([Maria, Bob, Kate, Alex, Sam,
+                    Hilton, Intercontinental, Kyiv, Youth, Kolos,
                     Sales, DataBase, Music, Maths, Sports,
                     Science_Maths, Art_Music, Computer_DataBase, Business_Sales, Math_Maths,
                     Art, Science, Math, Computer, Business
@@ -242,6 +293,69 @@ db.session.add_all([Maria, Bob, Kate, Alex, Sam,
 
 db.session.commit()
 
+@app.route('/show', methods=['GET', 'POST'])
+def get_hotel():
+    result=db.session.query(Hotel).all()
+
+    return render_template('all_hotel.html'.result=result)
+
+
+@app.route('/get')
+def insert_hotel_get():
+    Hilton = Hotel(hotel_name='Hilton',
+                   hotel_opened=2012,
+                   hotel_stars=5,
+                   hotel_type='hotel'
+                   )
+
+    Intercontinental = Hotel(hotel_name='Intercontinental',
+                             hotel_opened=2010,
+                             hotel_stars=5,
+                             hotel_type='hotel'
+                             )
+
+    Kyiv = Hotel(hotel_name='Kyiv',
+                 hotel_opened=2000,
+                 hotel_stars=3,
+                 hotel_type='appartments'
+                 )
+
+    Youth = Hotel(hotel_name='Youth',
+                  hotel_opened=2019,
+                  hotel_stars=3,
+                  hotel_type='hostel'
+                  )
+
+    Kolos = Hotel(hotel_name='Kolos',
+                  hotel_opened=2003,
+                  hotel_stars=2,
+                  hotel_type='hostel'
+                  )
+    db.session.add_all([Hilton, Intercontinental, Kyiv, Youth, Kolos])
+    db.session.commit()
+    return render_template('success.html')
+
+@app.route('/plot', methods=['GET', 'POST'])
+def plot():
+    query1 = (
+        db.session.query(
+            Hotel.hotel_name,
+            Hotel.hotel_stars.label('stars')
+        )
+    ).all()
+
+    hotel_name, hotel_stars = zip(*query1)
+    bar = go.Bar(
+        x = hotel_name,
+        y = hotel_stars
+    )
+
+    data = {
+        "bar": [bar]
+    }
+    graphs_json = json.dumps(data, cls = plotly.utils.PlotlyJSONEncoder)
+
+    return render_template('plot.html', graphsJSON=graphs_json)
 
 
 @app.route('/dashboard', methods=['GET', 'POST'])
@@ -250,7 +364,7 @@ def dashboard():
         db.session.query(
             User.user_name,
             func.count(Presentation.presentation_name).label('presentation_name')
-        ).join(Presentation, Usser.user_email == Presentation.user_email).
+        ).join(Presentation, User.user_email == Presentation.user_email).
             group_by(User.user_name)
     ).all()
 
@@ -285,6 +399,8 @@ def dashboard():
     graphs_json = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
 
     return render_template('dashboard.html', graphsJSON=graphs_json)
+
+
 
 @app.route('/edit_user/<string:email>', methods=['GET', 'POST'])
 def edit_user(email):

@@ -6,21 +6,10 @@ db.session.query(association).delete()
 db.session.query(Topic).delete()
 db.session.query(Presentation).delete()
 db.session.query(User).delete()
+db.session.query(Hotel).delete()
 db.session.query(Participant).delete()
 
-
-# # # создане объектов
-#
-# insert into User (user_email, user_name, user_phone, user_birthday) values ('maria@gmail.com', 'Maria', '+380669983855', '1999-4-7');
-#
-# insert into User (user_email, user_name, user_phone, user_birthday) values ('bob@gmail.com', 'Bob', '+380123456789', '2000-1-20');
-#
-# insert into User (user_email, user_name, user_phone, user_birthday) values ('kate@gmail.com', 'Kate', '+123456789011', '1998-2-25');
-#
-# insert into User (user_email, user_name, user_phone, user_birthday) values ('alex@gmail.com', 'Alex', '+380999999999', '1997-2-25');
-#
-# insert into User (user_email, user_name, user_phone, user_birthday) values ('sam@gmail.com', 'Sam', '+380777777777', '1999-2-1');
-#
+## User
 
 Maria = User(user_email = 'maria@gmail.com',
              user_name = 'Maria',
@@ -52,9 +41,47 @@ Sam = User(user_email = 'sam@gmail.com',
              user_birthday = '1999-2-1'
             )
 
+#  Hotel
 
-# insert into Presentation (presentation_name, user_email, presentation_date) values ('Sales', 'alex@gmail.com', '2020-1-4');
-#
+Hilton = Hotel(hotel_name = 'Hilton',
+               hotel_opened = 2012,
+               hotel_stars = 5,
+               hotel_type = 'hotel'
+               )
+
+Intercontinental = Hotel(hotel_name = 'Intercontinental',
+                         hotel_opened = 2010,
+                         hotel_stars = 5,
+                         hotel_type = 'hotel'
+                         )
+
+Kyiv = Hotel(hotel_name = 'Kyiv',
+             hotel_opened = 2000,
+             hotel_stars = 3,
+             hotel_type = 'appartments'
+             )
+
+Youth = Hotel(hotel_name = 'Youth',
+              hotel_opened = 2019,
+              hotel_stars = 3,
+              hotel_type = 'hostel'
+              )
+
+Kolos = Hotel(hotel_name = 'Kolos',
+              hotel_opened = 2003,
+              hotel_stars = 2,
+              hotel_type = 'hostel'
+              )
+
+#class Hotel(db.Model):
+#    tablename = 'Hotel'
+ #   hotel_name = db.Column(db.String(20), primary_key=True)
+  #  hotel_opened = db.Column(db.Date)
+   # hotel_stars = db.Column(db.String(20))
+    #hotel_type = db.Column(db.String(20))
+
+
+# Presentation
 
 Sales = presentation(presentation_name = 'Sales',
            user_email = 'alex@gmail.com',
@@ -81,8 +108,7 @@ Sports = presentation(presentation_name = 'Sports',
                  )
 
 
-# insert into Participant (participant_list, participant_name) values ('Science_Maths', 'Alex, Bob');
-#
+# Participant
 
 Science_Maths = Participant(participant_list = 'Science_Maths',
                participant_name = 'Alex, Bob'
@@ -155,6 +181,7 @@ Maths.participant_list_fk.append(Math_Maths)
 
 
 db.session.add_all([Maria, Bob, Kate, Alex, Sam,
+                    Hilton, Intercontinental, Kyiv, Youth, Kolos,
                     Sales, DataBase, Music, Maths, Sports,
                     Science_Maths, Art_Music, Computer_DataBase, Business_Sales, Math_Maths,
                     Art, Science, Math, Computer, Business

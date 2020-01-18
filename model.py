@@ -26,6 +26,25 @@ class User(db.Model):
 
     user_presentation = db.relationship('Presentation')
 
+# New class Hotel
+class Hotel(db.Model):
+    tablename = 'Hotel'
+    hotel_name = db.Column(db.String(20), primary_key=True)
+    hotel_opened = db.Column(db.Integer)
+    hotel_stars = db.Column(db.Integer)
+    hotel_type = db.Column(db.String(20))
+
+    user_hotel = db.relationship('User', secondary = 'UserHasHotel')
+
+# new relation many Users have many Hotels
+class UserHasHotel(db.Model):
+    __tablename__= 'UserHasHotel'
+    user_name = db.Column(db.String(20), db.ForeignKey('User.user_name'), primary_key=True)
+    hotel_name = db.Column(db.String(20), db.ForeignKey('Hotel.hotel_name'), primary_key=True)
+
+
+    hotel_name_fk = db.relationship("Hotel", secondary='UserHasHotel')
+
 
 class association(db.Model):
     __tablename__ = 'associate_table'
