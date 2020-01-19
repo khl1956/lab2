@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from forms.CountryForm import CountryForm
-from sqlalchemy.sql import func
 import plotly
 import plotly.graph_objs as go
 import json
@@ -13,11 +12,11 @@ app.secret_key = 'key'
 
 # if ENV == 'dev':
 #     app.debug = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost'
 # else:
-#     app.debug = False
-#     app.config['SECRET_KEY'] = 'laba2'
-#     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://mjmxekekolllgi:906b53d31abc57cf4f389ea7d7546ade4af39dcaded44afb9a8ee8c99cc1f68f@ec2-174-129-33-19.compute-1.amazonaws.com:5432/damp2mcuqj7s40'
+app.debug = False
+app.config['SECRET_KEY'] = 'laboratory2'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://mjmxekekolllgi:906b53d31abc57cf4f389ea7d7546ade4af39dcaded44afb9a8ee8c99cc1f68f@ec2-174-129-33-19.compute-1.amazonaws.com:5432/damp2mcuqj7s40'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
