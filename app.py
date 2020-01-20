@@ -26,8 +26,8 @@ from sklearn.cluster import KMeans
 
 app = Flask(__name__)
 app.secret_key = 'key'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://vkntpqzmequvzy:d0cfa0ace686dbc41dd553bd05555159211f45db3571ab404cac94be19047fa8@ec2-174-129-254-231.compute-1.amazonaws.com:5432/dbm1daba6oq9rk'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:1@localhost/samovilov'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://moetxyhepqykat:f9a88ea7a09364794133b22d23583563fbf212687457e17a8cc14233dcceefc7@ec2-54-174-221-35.compute-1.amazonaws.com:5432/d76hr8uah1jjfj'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:1@localhost/samovilov'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
