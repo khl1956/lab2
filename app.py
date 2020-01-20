@@ -159,18 +159,18 @@ Method4 = OrmMethod(
 
 db.session.add_all([
 
-    John,
-    Paul,
-    George,
-    Ringo,
-    Paul_nose,
-    Paul_lips,
-    John_nose,
-    George_eyes,
-    Pomade,
-    Shadows,
-    Conciller,
-    Poudre
+    User1,
+    User2,
+    User3,
+    User4,
+    Class1,
+    Class2,
+    Class3,
+    Class4,
+    Method1,
+    Method2,
+    Method3,
+    Method4
 ])
 
 db.session.commit()
