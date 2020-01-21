@@ -1,0 +1,20 @@
+<!-- app/templates/base.html -->
+{% extends "bootstrap/base.html" %}
+<!-- Modify nav bar menu -->
+{% block styles %}
+{{super()}}
+<link rel="stylesheet"
+      href="{{url_for('.static', filename='css/style.css')}}">
+{% endblock %}
+
+{% block navbar %}
+<ul class="nav navbar-nav navbar-right">
+        <li><a href="{{url_for('home_page')}}">Home</a></li>
+        <li><a href="{{url_for('list_tables', table_name='subject')}}">Subjects</a></li>
+        <li><a href="{{url_for('list_tables', table_name='student')}}">Students</a></li>
+        <li><a href="{{url_for('list_tables', table_name='lab')}}">Labs</a></li>
+        <li><a href="{{url_for('list_tables', table_name='lab_result')}}">Lab_results</a></li>
+        <li><a href="{{url_for('list_tables', table_name='skill')}}">Skills</a></li>
+        <li><a href="{{url_for('list_tables', table_name='student_skill')}}">Student_skills</a></li>
+</ul>
+{% endblock %}
