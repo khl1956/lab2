@@ -26,8 +26,8 @@ from sklearn.cluster import KMeans
 
 app = Flask(__name__)
 app.secret_key = 'key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://moetxyhepqykat:f9a88ea7a09364794133b22d23583563fbf212687457e17a8cc14233dcceefc7@ec2-54-174-221-35.compute-1.amazonaws.com:5432/d76hr8uah1jjfj'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:1@localhost/samovilov'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://vkntpqzmequvzy:d0cfa0ace686dbc41dd553bd05555159211f45db3571ab404cac94be19047fa8@ec2-174-129-254-231.compute-1.amazonaws.com:5432/dbm1daba6oq9rk'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:fastdagger@localhost/Milev'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -68,112 +68,12 @@ class OrmParameter(db.Model):
     parameter_type = db.Column(db.String(25), nullable=False)
     method_name = db.Column(db.String(30), db.ForeignKey('method.method_name'), nullable=False)
 
-db.drop_all()
+
+# db.drop_all()
+#
+# db.create_all()
 
 
-db.create_all()
-
-User1 = OrmUser(
-    user_email='Sergei@gmail.com',
-    user_name ='Sergei',
-    user_age=20,
-    user_university='KPI'
-)
-
-User2 = OrmUser(
-    user_email='Igor@gmail.com',
-    user_name ='Igor',
-    user_age=25,
-    user_university='NAU'
-)
-User3 = OrmUser(
-    user_email='Petr@gmail.com',
-    user_name ='Petr',
-    user_age=16,
-    user_university='KPI'
-)
-User4 = OrmUser(
-    user_email='Gora@gmail.com',
-    user_name ='Georgyu',
-    user_age=20,
-    user_university='KNUBA'
-)
-
-
-Class1 = OrmClass(
-    class_name='Numeric operations',
-    methods_quantity=3,
-    class_description='Class of basic actions with numbers',
-    user_email = 'Sergei@gmail.com'
-)
-
-Class2 = OrmClass(
-    class_name='Numeric operations advanced',
-    methods_quantity=2,
-    class_description='Complicated actions with numbers',
-    user_email = 'Sergei@gmail.com'
-)
-
-Class3 = OrmClass(
-    class_name='String operations',
-    methods_quantity=2,
-    class_description='Class of basic actions with strings',
-    user_email='Petr@gmail.com
-)
-
-Class4 = OrmClass(
-    class_name='String operations advanced',
-    methods_quantity=2,
-    class_description='Complicated actions with strings',
-    user_email='Igor@gmail.com'
-)
-
-Method1 = OrmMethod(
-    method_name='Adding numbers',
-    method_description='Adding two numbers',
-    output_type='Float',
-    class_name='Numeric operations'
-)
-
-Method2 = OrmMethod(
-    method_name='Number exponentiation',
-    method_description='Raising first number to the power of second one',
-    output_type='Integer',
-    class_name='Numeric operations advanced'
-)
-
-Method3 = OrmMethod(
-    method_name='Adding strings',
-    method_description='Adding two strings',
-    output_type='String',
-    class_name='String operations'
-)
-
-Method4 = OrmMethod(
-    method_name='Finding string',
-    method_description='Defies, if one string contains another',
-    output_type='boolean',
-    class_name='String operations advanced'
-)
-
-
-db.session.add_all([
-
-    User1,
-    User2,
-    User3,
-    User4,
-    Class1,
-    Class2,
-    Class3,
-    Class4,
-    Method1,
-    Method2,
-    Method3,
-    Method4
-])
-
-db.session.commit()
 
 @app.route('/')
 def root():
