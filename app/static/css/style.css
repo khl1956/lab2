@@ -1,0 +1,21 @@
+/* app/static/css/style.css */
+
+.outer {
+    display: table;
+    position: absolute;
+    height: 70%;
+    width: 100%;
+    z-index: -2;
+}
+
+.middle {
+    display: table-cell;
+    vertical-align: middle;
+    z-index: -1;
+}
+
+.inner {
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
